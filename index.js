@@ -17,7 +17,7 @@ function getRandomInt(min, max) {
 }
 
 function getToken() {
-    return  fs.readFileSync('token.txt', 'utf8');;
+    return fs.readFileSync('token.txt', 'utf8');;
 }
 
 bot.on('message', msg => {
@@ -69,9 +69,9 @@ bot.on('message', msg => {
         for (const [channelId, channel] of voiceChannels) {
             for (const [memberID, member] of channel.members) {
                 var user = member.user;
-                    member.voice.setChannel(userChannel)
-                        .then(() => console.log(`Moved ${member.user.tag}.`))
-                        .catch(console.error);
+                member.voice.setChannel(userChannel)
+                    .then(() => console.log(`Moved ${member.user.tag}.`))
+                    .catch(console.error);
             };
         }
     }
