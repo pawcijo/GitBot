@@ -3,6 +3,41 @@ const bot = new Discord.Client();
 var fs = require('fs');
 
 const token = getToken();
+var summonedUsersArray = [];
+class LastThrowPerson {
+
+    constructor(user, member, lastChannelID) {
+        this._user = user;
+        this._member = member;
+        this._lastChannelID = lastChannelID;
+    }
+    set user(user) {
+        this._user = user;
+    }
+
+    set member(member) {
+        this._member = member;
+    }
+
+    set lastChannelID(lastChannelID) {
+        this._lastChannelID = lastChannelID;
+    }
+
+    get user() {
+        return this._user;
+    }
+
+    get member() {
+        return this._member;
+    }
+
+    get lastChannelID() {
+        return this._lastChannelID;
+    }
+
+
+
+};
 
 bot.on('ready', () => {
     console.log("This bot tu tego !");
@@ -59,7 +94,27 @@ bot.on('message', msg => {
 
     }
 
-    if (msg.content.toLowerCase() === 'afk3nix') {
+    if (msg.content.toLowerCase() === 'help') {
+        msg.channel.send("Co potrafię : summon,sendback,wypierdol,siema,ping,sayhi.");
+    }
+
+    if (msg.content.toLowerCase() === 'sendback') {
+
+        for (const lastPersonThrow of summonedUsersArray) {
+            var lastUserChannel = bot.channels.cache.find(c => c.id === lastPersonThrow.lastChannelID && c.type === "voice");
+            lastPersonThrow.member.voice.setChannel(lastUserChannel)
+                .then(() => console.log(`Moved ${lastPersonThrow.member.user.tag}.`))
+                .catch(console.error);
+        }
+
+    }
+
+    // get all users into one channel
+    if (msg.content.toLowerCase() === 'summon') {
+
+
+        //clear all cached users
+        summonedUsersArray = [];
 
         //Get voice channel name of the user  
         var userChannelName = msg.member.voice.channel.name;
@@ -69,6 +124,8 @@ bot.on('message', msg => {
         for (const [channelId, channel] of voiceChannels) {
             for (const [memberID, member] of channel.members) {
                 var user = member.user;
+                var throwPerson = new LastThrowPerson(user, member, member.voice.channelID);
+                summonedUsersArray.push(throwPerson);
                 member.voice.setChannel(userChannel)
                     .then(() => console.log(`Moved ${member.user.tag}.`))
                     .catch(console.error);
