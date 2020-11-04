@@ -56,21 +56,21 @@ function getToken() {
 }
 
 bot.on('message', msg => {
-    if (msg.content.toLowerCase() === "siema") {
-        msg.channel.send("Pal gume lampucaro.");
-    }
-    else if (msg.content.toLowerCase() === 'ping') {
-        msg.reply('pong');
-    }
-    else if (msg.content.toLowerCase() === 'sayhi') {
-        msg.channel.send("Hello there!");
-    }
 
     // if( msg.member.user.username.includes('Aw3nix')){
     //     msg.reply(pociski[getRandomInt(0,4)]);
     // }
 
-    if (msg.content.toLowerCase() === 'wypierdol') {
+    if (msg.content.toLowerCase() === "jaca siema") {
+        msg.channel.send("Pal gume lampucaro.");
+    }
+    else if (msg.content.toLowerCase() === 'jaca ping') {
+        msg.reply('pong');
+    }
+    else if (msg.content.toLowerCase() === 'jaca sayhi') {
+        msg.channel.send("Hello there!");
+    }
+    else if (msg.content.toLowerCase() === 'jaca wypierdol') {
 
         //Get voice channel name of the user  
         var userChannelName = msg.member.voice.channel.name;
@@ -83,6 +83,7 @@ bot.on('message', msg => {
         for (const [memberID, member] of channel.members) {
             var user = member.user;
             if (member.voice.selfMute && member.voice.selfDeaf) {
+
                 member.voice.setChannel(afkChannel)
                     .then(() => console.log(`Moved ${member.user.tag}.`))
                     .catch(console.error);
@@ -93,12 +94,41 @@ bot.on('message', msg => {
         };
 
     }
+    else if (msg.content.toLowerCase() === 'jaca praca') {
+        msg.channel.send("Bo kto w rusta gra ten Koks.");
 
-    if (msg.content.toLowerCase() === 'help') {
+        var rustChannel = bot.channels.cache.find(c => c.name === 'Rust ONLY' && c.type === "voice");
+        var firstChannel = bot.channels.cache.find(c => c.name === 'Game room 1' && c.type === "voice");
+
+        //Get voice channel name of the user  
+        var userChannelName = msg.member.voice.channel.name;
+        var channel = bot.channels.cache.find(c => c.name === userChannelName && c.type === "voice");
+        for (const [memberID, member] of channel.members) {
+            var user = member.user;
+            
+            var kickUser = true;
+            user.presence.activities.forEach(activity => {
+                    console.log(user + " activity : "+ activity.name);
+                    if(activity.name.includes('Rust')){
+                        kickUser = false;
+                    }
+                });
+           
+            if (kickUser) {
+                member.voice.setChannel(firstChannel)
+                    .then(() => console.log(`Moved ${member.user.tag}.`))
+                    .catch(console.error);
+            } else {
+                msg.channel.send(user.username + ' to kox');
+            }
+
+        };
+
+    }
+    else if (msg.content.toLowerCase() === 'jaca help') {
         msg.channel.send("Co potrafię : summon,sendback,wypierdol,siema,ping,sayhi.");
     }
-
-    if (msg.content.toLowerCase() === 'sendback') {
+    else if (msg.content.toLowerCase() === 'jaca sendback') {
 
         for (const lastPersonThrow of summonedUsersArray) {
             var lastUserChannel = bot.channels.cache.find(c => c.id === lastPersonThrow.lastChannelID && c.type === "voice");
@@ -108,10 +138,8 @@ bot.on('message', msg => {
         }
 
     }
-
-    // get all users into one channel
-    if (msg.content.toLowerCase() === 'summon') {
-
+    else if (msg.content.toLowerCase() === 'jaca summon') {
+        // get all users into one channel
 
         //clear all cached users
         summonedUsersArray = [];
@@ -132,7 +160,15 @@ bot.on('message', msg => {
             };
         }
     }
+    else if (msg.content.toLowerCase().includes('jaca') && msg.content.toLowerCase() != ('jaca help')) {
+        msg.channel.send("Co potrafię : summon,sendback,wypierdol,siema,ping,sayhi.");
+    }
+    else {
 
-})
+    }
+
+}
+
+)
 
 bot.login(token);
