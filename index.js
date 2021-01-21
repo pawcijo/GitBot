@@ -80,10 +80,10 @@ bot.on('message', msg => {
         displayHelp(msg);
     }
     else if (msg.content.toLowerCase().includes('jaca mutuj ')) {
-        if(msg.member.roles.cache.find(r => r.name === "Mod")){
+        if (msg.member.roles.cache.find(r => r.name === "Mod")) {
             tempMute(msg)
         }
-        else{
+        else {
             msg.channel.send(`Oj nie byczku nie masz moda. ;)`)
         }
     }
@@ -205,7 +205,7 @@ function getUserFromMention(mention) {
     }
 }
 
-function MemberFromUserId(Id,msg) {
+function MemberFromUserId(Id, msg) {
     return msg.guild.members.fetch(Id)
         .catch(console.error);
 }
@@ -217,34 +217,65 @@ function MemberFromUserId(Id,msg) {
 function tempMute(msg) {
     //[0]   [1]     [2]    [3]
     //jaca mutuj @Nawros time
-    let args = msg.content.split(" ");
+
+    let args = msg.content.split(' ');
+    let stringWithoutTime = args[0] + " " + args[1] + " " + args[2] + "  ";  //discord @Mention adds another space 
+    let time = msg.content.substring(stringWithoutTime.length);
+
     var person = getUserFromMention(args[2]);
     if (!person) {
         return msg.reply("Ni ma takiego usera: " + person)
     }
     else {
-        let time = args[3];
-        var member =  MemberFromUserId(person.id,msg);
+        var member = MemberFromUserId(person.id, msg);
 
         const voiceChannels = msg.guild.channels.cache.filter(c => c.type === 'voice');
         for (const [channelId, channel] of voiceChannels) {
             for (const [memberID, member] of channel.members) {
                 var user = member.user;
-                if(user === person)
-                {
-                member.voice.setMute(true);
-                msg.channel.send(`@${person.tag} dostał legancko mute na ${time}`)
-                setTimeout(function () {
-                    member.voice.setMute(false);
-                    msg.channel.send(`@${person.tag} dostał legancko unmute.`)
-                }, ms(time));
-                return;
-            };
-        }
+                if (user === person) {
+
+                    var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(
+                        time
+                    );
+
+                    if (!match) {
+                        msg.channel.send(`${time} nie określa  przedziału czasu. ( np 15s, 2h, 30m,)`)
+                        return;
+                    }
+                    else {
+                        member.voice.setMute(true);
+                        msg.channel.send(`@${person.tag} dostał legancko mute na  ${time}`)
+                    }
+
+                    setTimeout(function () {
+                        member.voice.setMute(false);
+
+
+                        if (!match) {
+                            msg.channel.send(`@${person.tag} dostał legancko unmute.`);
+                        }
+                        else {
+                            msg.channel.send(`@${person.tag} dostał legancko unmute.`)
+                        }
+                    }, getTime(time));
+                    return;
+                };
+            }
         }
     }
 
 }
+
+function getTime(time) {
+    try {
+        return ms(time);
+    }
+    catch (error) {
+        console.log(time + "is not legit");
+    }
+}
+
 
 
 
