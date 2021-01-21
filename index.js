@@ -10,32 +10,32 @@ var summonedUsersArray = [];
 class LastThrowPerson {
 
     constructor(user, member, lastChannelID) {
-        this.user = user;
-        this.member = member;
-        this.lastChannelID = lastChannelID;
+        this.user_ = user;
+        this.member_ = member;
+        this.lastChannelID_ = lastChannelID;
     }
     set user(user) {
-        this.user = user;
+        this.user_ = user;
     }
 
     set member(member) {
-        this.member = member;
+        this.member_ = member;
     }
 
     set lastChannelID(lastChannelID) {
-        this.lastChannelID = lastChannelID;
+        this.lastChannelID_ = lastChannelID;
     }
 
     get user() {
-        return this.user;
+        return this.user_;
     }
 
     get member() {
-        return this.member;
+        return this.member_;
     }
 
     get lastChannelID() {
-        return this.lastChannelID;
+        return this.lastChannelID_;
     }
 };
 
@@ -55,40 +55,51 @@ function getToken() {
 
 bot.on('message', msg => {
 
-    if (msg.content.toLowerCase() === "jaca siema") {
-        sayHi(msg);
-    }
-    else if (msg.content.toLowerCase() === 'jaca ping') {
-        msg.reply('pong');
-    }
-    else if (msg.content.toLowerCase() === 'jaca wypierdol') {
-        kickAfk(msg);
-    }
-    else if (msg.content.toLowerCase() === 'jaca praca') {
-        clear_rust();
-    }
-    else if (msg.content.toLowerCase() === 'jaca help') {
-        displayHelp(msg);
-    }
-    else if (msg.content.toLowerCase() === 'jaca sendback') {
-        sendBack();
-    }
-    else if (msg.content.toLowerCase() === 'jaca summon') {
-        summonAll(msg);
-    }
-    else if (msg.content.toLowerCase().includes('jaca') && !msg.content.includes('jaca mutuj') && msg.content.toLowerCase() != ('jaca help')) {
-        displayHelp(msg);
-    }
-    else if (msg.content.toLowerCase().includes('jaca mutuj ')) {
-        if (msg.member.roles.cache.find(r => r.name === "Mod")) {
-            tempMute(msg)
+    if (msg.content.includes("jaca")) {
+        console.log("New msg : " + msg.content);
+        if (msg.content.toLowerCase() === "jaca siema") {
+            sayHi(msg);
+        }
+        else if (msg.content.toLowerCase() === 'jaca ping') {
+            console.log("jaca ping");
+            msg.reply('pong');
+        }
+        else if (msg.content.toLowerCase() === 'jaca kickafk') {
+            console.log("jaca kickAfk");
+            kickAfk(msg);
+        }
+        else if (msg.content.toLowerCase() === 'jaca praca') {
+            console.log("jaca clear_rust");
+            clear_rust();
+        }
+        else if (msg.content.toLowerCase() === 'jaca help') {
+            console.log("jaca help");
+            displayHelp(msg);
+        }
+        else if (msg.content.toLowerCase() === 'jaca sendback') {
+            console.log("jaca sendback");
+            sendBack();
+        }
+        else if (msg.content.toLowerCase() === 'jaca summon') {
+            console.log("jaca summon");
+            summonAll(msg);
+        }
+        else if (msg.content.toLowerCase() === 'jaca') {
+            console.log("jaca");
+            displayHelp(msg);
+        }
+        else if (msg.content.toLowerCase().includes('jaca mute')) {
+            console.log("jaca mute");
+            if (msg.member.roles.cache.find(r => r.name === "Mod")) {
+                tempMute(msg)
+            }
+            else {
+                msg.channel.send(`Oj nie byczku nie masz moda. ;)`)
+            }
         }
         else {
-            msg.channel.send(`Oj nie byczku nie masz moda. ;)`)
+            console.log("Unknown commend : " + msg.content);
         }
-    }
-    else {
-
     }
 
 }
@@ -140,7 +151,7 @@ function kickAfk(msg) {
     //Get channel object
     var channel = bot.channels.cache.find(c => c.name === userChannelName && c.type === "voice");
     //Get afk channel object
-    var afkChannel = bot.channels.cache.find(c => c.name === 'afk' && c.type === "voice");
+    var afkChannel = bot.channels.cache.find(c => c.name.includes('afk') && c.type === "voice");
 
     var channel = bot.channels.cache.find(c => c.name === userChannelName && c.type === "voice");
     for (const [memberID, member] of channel.members) {
@@ -158,7 +169,7 @@ function kickAfk(msg) {
 }
 
 function displayHelp(msg) {
-    msg.channel.send("Co potrafię : summon,sendback,wypierdol,siema,ping,sayhi.");
+    msg.channel.send("Co potrafię : summon, sendback, kickAfk , siema , ping, mute, sayhi.");
 }
 
 
