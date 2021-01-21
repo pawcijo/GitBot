@@ -229,13 +229,15 @@ function tempMute(msg) {
     //[0]   [1]     [2]    [3]
     //jaca mutuj @Nawros time
 
-    let args = msg.content.split(' ');
-    let stringWithoutTime = args[0] + " " + args[1] + " " + args[2] + "  ";  //discord @Mention adds another space 
-    let time = msg.content.substring(stringWithoutTime.length);
+    let msgContent = msg.content;
+    let msgFix = msg.content.replace("  "," ");
+    let args = msgFix.split(' ');
+    let stringWithoutTime = args[0] + " " + args[1] + " " + args[2] + " ";
+    let time = args[3]
 
     var person = getUserFromMention(args[2]);
     if (!person) {
-        return msg.reply("Ni ma takiego usera: " + person)
+        return msg.reply("Nie ma takiego usera: " + person)
     }
     else {
         var member = MemberFromUserId(person.id, msg);
