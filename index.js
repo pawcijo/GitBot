@@ -54,41 +54,41 @@ function getToken() {
 }
 
 bot.on('message', msg => {
-    msg = msg.content.toLowerCase();
+    msgString = msg.content.toLowerCase();
     if (msg.content.includes("jaca")) {
         console.log("New msg : " + msg.content);
-        if (msg === "jaca sayhi") {
+        if (msgString === "jaca sayhi") {
             sayHi(msg);
         }
-        else if (msg === 'jaca ping') {
+        else if (msgString === 'jaca ping') {
             console.log("jaca ping");
             msg.reply('pong');
         }
-        else if (msg === 'jaca kickafk') {
+        else if (msgString === 'jaca kickafk') {
             console.log("jaca kickAfk");
             kickAfk(msg);
         }
-        else if (msg === 'jaca praca') {
+        else if (msgString === 'jaca praca') {
             console.log("jaca clear_rust");
             clear_rust();
         }
-        else if (msg === 'jaca help') {
+        else if (msgString === 'jaca help') {
             console.log("jaca help");
             displayHelp(msg);
         }
-        else if (msg === 'jaca sendback') {
+        else if (msgString === 'jaca sendback') {
             console.log("jaca sendback");
             sendBack();
         }
-        else if (msg === 'jaca summon') {
+        else if (msgString === 'jaca summon') {
             console.log("jaca summon");
             summonAll(msg);
         }
-        else if (msg === 'jaca') {
+        else if (msgString === 'jaca') {
             console.log("jaca");
             displayHelp(msg);
         }
-        else if (msg.includes('jaca mute')) {
+        else if (msgString.includes('jaca mute')) {
             console.log("jaca mute");
             if (msg.member.roles.cache.find(r => r.name === "Mod")) {
                 tempMute(msg)
