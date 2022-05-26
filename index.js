@@ -54,41 +54,41 @@ function getToken() {
 }
 
 bot.on('message', msg => {
-
+    msg = msg.content.toLowerCase();
     if (msg.content.includes("jaca")) {
         console.log("New msg : " + msg.content);
-        if (msg.content.toLowerCase() === "jaca siema") {
+        if (msg === "jaca sayhi") {
             sayHi(msg);
         }
-        else if (msg.content.toLowerCase() === 'jaca ping') {
+        else if (msg === 'jaca ping') {
             console.log("jaca ping");
             msg.reply('pong');
         }
-        else if (msg.content.toLowerCase() === 'jaca kickafk') {
+        else if (msg === 'jaca kickafk') {
             console.log("jaca kickAfk");
             kickAfk(msg);
         }
-        else if (msg.content.toLowerCase() === 'jaca praca') {
+        else if (msg === 'jaca praca') {
             console.log("jaca clear_rust");
             clear_rust();
         }
-        else if (msg.content.toLowerCase() === 'jaca help') {
+        else if (msg === 'jaca help') {
             console.log("jaca help");
             displayHelp(msg);
         }
-        else if (msg.content.toLowerCase() === 'jaca sendback') {
+        else if (msg === 'jaca sendback') {
             console.log("jaca sendback");
             sendBack();
         }
-        else if (msg.content.toLowerCase() === 'jaca summon') {
+        else if (msg === 'jaca summon') {
             console.log("jaca summon");
             summonAll(msg);
         }
-        else if (msg.content.toLowerCase() === 'jaca') {
+        else if (msg === 'jaca') {
             console.log("jaca");
             displayHelp(msg);
         }
-        else if (msg.content.toLowerCase().includes('jaca mute')) {
+        else if (msg.includes('jaca mute')) {
             console.log("jaca mute");
             if (msg.member.roles.cache.find(r => r.name === "Mod")) {
                 tempMute(msg)
@@ -107,7 +107,7 @@ bot.on('message', msg => {
 )
 
 function sayHi(msg) {
-    msg.channel.send("Siema " + msg.author.username + ".");
+    msg.channel.send("Hello " + msg.author.username + ".");
 }
 
 function sendBack() {
@@ -147,6 +147,10 @@ function summonAll(msg) {
 
 function kickAfk(msg) {
     //Get voice channel name of the user  
+    if (!msg.member.voice.channel) {
+        msg.channel.send(msg.author.username + " gnoju zafajdany na kanał najpierw wejdź.");
+        return;
+    }
     var userChannelName = msg.member.voice.channel.name;
     //Get channel object
     var channel = bot.channels.cache.find(c => c.name === userChannelName && c.type === "voice");
@@ -169,7 +173,7 @@ function kickAfk(msg) {
 }
 
 function displayHelp(msg) {
-    msg.channel.send("Co potrafię : summon, sendback, kickAfk , siema , ping, mute, sayhi.");
+    msg.channel.send("Co potrafię : summon, sendback, kickAfk, ping, mute, sayhi.");
 }
 
 
@@ -230,7 +234,7 @@ function tempMute(msg) {
     //jaca mutuj @Nawros time
 
     let msgContent = msg.content;
-    let msgFix = msg.content.replace("  "," ");
+    let msgFix = msg.content.replace("  ", " ");
     let args = msgFix.split(' ');
     let stringWithoutTime = args[0] + " " + args[1] + " " + args[2] + " ";
     let time = args[3]
