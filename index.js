@@ -1,5 +1,6 @@
 const Discord = require('discord.js')
-const bot = new Discord.Client();
+const {Client, GatewayIntentBits } = require('discord.js');
+const bot = new Discord.Client({intents: [GatewayIntentBits.Guilds]});
 var fs = require('fs');
 const ms = require("ms");
 
