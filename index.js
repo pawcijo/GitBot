@@ -1,10 +1,70 @@
-const Discord = require('discord.js')
-const {Client, GatewayIntentBits } = require('discord.js');
-const bot = new Discord.Client({intents: [GatewayIntentBits.Guilds]});
-var fs = require('fs');
-const ms = require("ms");
+const { REST, Routes } = require('discord.js');
+const { Client, GatewayIntentBits } = require('discord.js');
+const fs = require('node:fs');
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const commands = [];
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+function getToken() {
+    return fs.readFileSync('token.txt', 'utf8');;
+}
 
 const token = getToken();
+
+// Place your client and guild ids here
+const clientId = '701470949144526868';
+const guildId = '367440429064650752';
+
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    commands.push(command.data.toJSON());
+}
+
+const rest = new REST({ version: '10' }).setToken(getToken());
+
+(async () => {
+    try {
+        console.log(`Started refreshing ${commands.length} application (/) commands.`);
+
+        const data = await rest.put(
+            Routes.applicationGuildCommands(clientId, guildId),
+            { body: commands },
+        );
+
+        console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+    } catch (error) {
+        console.error(error);
+    }
+})();
+
+
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isChatInputCommand()) {
+        return;
+    }
+
+    if (interaction.commandName === 'ping') {
+        await interaction.reply({content: 'peng', ephemeral: true });
+    }
+
+    if (interaction.commandName === 'peng') {
+        await interaction.reply({content: 'peng', ephemeral: true });
+    }
+
+    if (interaction.commandName === 'gif') {
+        await interaction.reply({
+            content: 'random',
+            ephemeral: true
+        });
+    }
+
+
+
+});
+
+
+
 var summonedUsersArray = [];
 
 
@@ -41,19 +101,7 @@ class LastThrowPerson {
 };
 
 
-bot.on('ready', () => {
-    console.log("This bot tu tego !");
-
-    setInterval(() => {
-        clear_rust();
-    }, 10000);
-
-})
-
-function getToken() {
-    return fs.readFileSync('token.txt', 'utf8');;
-}
-
+/*
 bot.on('message', msg => {
     msgString = msg.content.toLowerCase();
     if (msg.content.includes("jaca")) {
@@ -106,6 +154,8 @@ bot.on('message', msg => {
 }
 
 )
+s
+*/
 
 function sayHi(msg) {
     msg.channel.send("Hello " + msg.author.username + ".");
@@ -145,7 +195,7 @@ function summonAll(msg) {
 
 }
 
-
+/*
 function kickAfk(msg) {
     //Get voice channel name of the user  
     if (!msg.member.voice.channel) {
@@ -226,10 +276,14 @@ function MemberFromUserId(Id, msg) {
         .catch(console.error);
 }
 
+*/
 
 /**
  * @param {Discord.Message} msg message
  */
+
+/*
+
 function tempMute(msg) {
     //[0]   [1]     [2]    [3]
     //jaca mutuj @Nawros time
@@ -294,7 +348,5 @@ function getTime(time) {
     }
 }
 
-
-
-
-bot.login(token);
+*/
+client.login(token);
